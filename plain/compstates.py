@@ -1,13 +1,13 @@
 import codecs
 
-MODE=2
+MODE=1
 if MODE==1:
 
     with codecs.open('msr_train_states.txt', 'w', encoding='utf8') as wf:
         with codecs.open('msr_training.utf8', 'r', encoding='utf8') as f:
             lines = f.readlines()
             for line in lines:
-                words = line.split(' ')
+                words = line.strip().split(' ')
                 state = ""
                 for word in words:
                     if len(word) == 0 or word == "\r\n":
@@ -24,7 +24,7 @@ if MODE == 2:
         with codecs.open('msr_test_gold.utf8', 'r', encoding='utf8') as f:
             lines = f.readlines()
             for line in lines:
-                words = line.split(' ')
+                words = line.strip().split(' ')
                 state = ""
                 for word in words:
                     if len(word) == 0 or word == "\r\n":

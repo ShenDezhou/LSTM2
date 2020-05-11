@@ -22,14 +22,14 @@ from keras.initializers import Constant
 
 #               precision    recall  f1-score   support
 #
-#            B     0.9616    0.9598    0.9607     56882
-#            M     0.7737    0.8546    0.8122     11479
-#            E     0.9648    0.9449    0.9548     56882
-#            S     0.9370    0.9386    0.9378     47490
+#            B     0.4640    0.4682    0.4660     58781
+#            M     0.2089    0.2374    0.2222     18701
+#            E     0.4136    0.4273    0.4204     58781
+#            S     0.1692    0.1515    0.1598     48092
 #
-#    micro avg     0.9421    0.9421    0.9421    172733
-#    macro avg     0.9093    0.9245    0.9164    172733
-# weighted avg     0.9434    0.9421    0.9426    172733
+#     accuracy                         0.3491    184355
+#    macro avg     0.3139    0.3211    0.3171    184355
+# weighted avg     0.3451    0.3491    0.3469    184355
 
 dicts = []
 unidicts = []
@@ -55,36 +55,40 @@ def getTopN(dictlist):
 
 
 with codecs.open('msr_dic/msr_training_words.utf8', 'r', encoding='utf8') as fa:
-    # with codecs.open('msr_dic/msr_test_words.utf8', 'r', encoding='utf8') as fb:
-    #     with codecs.open('msr_dic/contract_words.utf8', 'r', encoding='utf8') as fc:
-            lines = fa.readlines()
-            # lines.extend(fb.readlines())
-            # lines.extend(fc.readlines())
-            lines = [line.strip() for line in lines]
-            dicts.extend(lines)
-            # uni, pre, suf, long 这四个判断应该依赖外部词典，置信区间为95%，目前没有外部词典，就先用训练集词典来替代
-            unidicts.extend([line for line in lines if len(line) == 1 and re.search(u'[\u4e00-\u9fff]', line)])
-            predicts.extend([line[0] for line in lines if len(line) > 1 and re.search(u'[\u4e00-\u9fff]', line)])
-            predicts = getTopN(predicts)
-            sufdicts.extend([line[-1] for line in lines if len(line) > 1 and re.search(u'[\u4e00-\u9fff]', line)])
-            sufdicts = getTopN(sufdicts)
-            longdicts.extend([line for line in lines if len(line) > 3 and re.search(u'[\u4e00-\u9fff]', line)])
-            puncdicts.extend(string.punctuation)
-            puncdicts.extend(list("！？。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰–‘’‛“”„‟…‧﹏"))
-            digitsdicts.extend(string.digits)
-            chidigitsdicts.extend(list("零一二三四五六七八九十百千万亿兆〇零壹贰叁肆伍陆柒捌玖拾佰仟萬億兆"))
-            letterdicts.extend(string.ascii_letters)
+    # with codecs.open('msr_dic/pku_training_words.utf8', 'r', encoding='utf8') as fb:
+    #     with codecs.open('msr_dic/pku_test_words.utf8', 'r', encoding='utf8') as fc:
+    #         with codecs.open('msr_dic/contract_words.utf8', 'r', encoding='utf8') as fd:
+    #             with codecs.open('msr_dic/tc_web_words.utf8', 'r', encoding='utf8') as fe:
+                    lines = fa.readlines()
+                    # lines.extend(fb.readlines())
+                    # lines.extend(fc.readlines())
+                    # lines.extend(fd.readlines())
+                    # lines.extend(fe.readlines())
+                    lines = [line.strip() for line in lines]
+                    dicts.extend(lines)
+                    # uni, pre, suf, long 这四个判断应该依赖外部词典，置信区间为95%，目前没有外部词典，就先用训练集词典来替代
+                    unidicts.extend([line for line in lines if len(line) == 1 and re.search(u'[\u4e00-\u9fff]', line)])
+                    predicts.extend([line[0] for line in lines if len(line) > 1 and re.search(u'[\u4e00-\u9fff]', line)])
+                    predicts = getTopN(predicts)
+                    sufdicts.extend([line[-1] for line in lines if len(line) > 1 and re.search(u'[\u4e00-\u9fff]', line)])
+                    sufdicts = getTopN(sufdicts)
+                    longdicts.extend([line for line in lines if len(line) > 3 and re.search(u'[\u4e00-\u9fff]', line)])
+                    puncdicts.extend(string.punctuation)
+                    puncdicts.extend(list("！？。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰–‘’‛“”„‟…‧﹏"))
+                    digitsdicts.extend(string.digits)
+                    chidigitsdicts.extend(list("零一二三四五六七八九十百千万亿兆〇零壹贰叁肆伍陆柒捌玖拾佰仟萬億兆"))
+                    letterdicts.extend(string.ascii_letters)
 
-            somedicts = []
-            somedicts.extend(unidicts)
-            somedicts.extend(predicts)
-            somedicts.extend(sufdicts)
-            somedicts.extend(longdicts)
-            somedicts.extend(puncdicts)
-            somedicts.extend(digitsdicts)
-            somedicts.extend(chidigitsdicts)
-            somedicts.extend(letterdicts)
-            otherdicts.extend(set(dicts) - set(somedicts))
+                    somedicts = []
+                    somedicts.extend(unidicts)
+                    somedicts.extend(predicts)
+                    somedicts.extend(sufdicts)
+                    somedicts.extend(longdicts)
+                    somedicts.extend(puncdicts)
+                    somedicts.extend(digitsdicts)
+                    somedicts.extend(chidigitsdicts)
+                    somedicts.extend(letterdicts)
+                    otherdicts.extend(set(dicts) - set(somedicts))
 
 chars = []
 
@@ -110,7 +114,7 @@ with codecs.open('msr_dic/msr_bigram.utf8', 'r', encoding='utf8') as f:
 print(len(bigrams))
 
 rxdict = dict(zip(chars, range(1, 1 + len(chars))))
-rxdict['\n'] =0
+rxdict['\n'] = 0
 
 rbxdict = dict(zip(bigrams, range(1, 1+len(bigrams))))
 rbxdict['\n'] = 0
@@ -132,6 +136,7 @@ def getFeaturesDict(sentence, i):
     # featuresdic = dict([(str(j), features[j]) for j in range(len(features))])
     # return featuresdic
     return features
+
 def getCharType(ch):
     types = []
 
